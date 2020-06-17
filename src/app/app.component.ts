@@ -20,8 +20,10 @@ export class AppComponent implements OnInit {
     //The second argument of the FormControl allow to have one or an array of validators.
     //These validators should be passed as reference, not call the methods by adding at the end ().
     this.signupForm = new FormGroup({
-      'username': new FormControl(null, Validators.required),
-      'email': new FormControl(null, [Validators.required, Validators.email]),
+      'userData': new FormGroup({
+        'username': new FormControl(null, Validators.required),
+        'email': new FormControl(null, [Validators.required, Validators.email]),
+      }),
       'gender': new FormControl('male')
     });
   }
