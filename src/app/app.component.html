@@ -5,9 +5,12 @@
       <form [formGroup]="signupForm">
         <div class="form-group">
           <label for="username">Username</label>
+          <!--For the formControlName, if you want to use it as property binding,
+          we need to do it like this [formControlName]="''" with the name of the property inside the single quotations-->
           <input
             type="text"
             id="username"
+            formControlName="username"
             class="form-control">
         </div>
         <div class="form-group">
@@ -15,12 +18,14 @@
           <input
             type="text"
             id="email"
+            formControlName="email"
             class="form-control">
         </div>
         <div class="radio" *ngFor="let gender of genders">
           <label>
             <input
               type="radio"
+              formControlName="gender"
               [value]="gender">{{ gender }}
           </label>
         </div>
