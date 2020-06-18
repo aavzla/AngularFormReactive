@@ -47,9 +47,16 @@
                   (click)="onAddHobby()">
             Add Hobby
           </button>
+          <!--This solution is by access through the form-->
+          <!--<div class="form-group"
+                   *ngFor="let hobbieControl of signupForm.get('hobbies').controls; let i = index">-->
+          <!--This solution is by a method-->
+          <!--<div class="form-group"
+                   *ngFor="let hobbieControl of getControls(); let i = index">-->
+          <!--This solution is by a getter-->
           <div class="form-group"
-               *ngFor="let hobbieControl of signupForm.get('hobbies').controls; let i = index">
-            <input type="text" class="form-control" [formControlName]="i"/>
+               *ngFor="let hobbieControl of controls; let i = index">
+            <input type="text" class="form-control" [formControlName]="i" />
           </div>
         </div>
         <span class="help-block"

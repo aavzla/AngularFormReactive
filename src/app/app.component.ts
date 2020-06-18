@@ -16,6 +16,12 @@ export class AppComponent implements OnInit {
   //This property will hold our reactive form.
   signupForm: FormGroup;
 
+  //This solution is by a getter
+  get controls() {
+    //This is an alternative casting solution.
+    return (this.signupForm.get('hobbies') as FormArray).controls;
+  }
+
   ngOnInit() {
 
     //The second argument of the FormControl allow to have one or an array of validators.
@@ -37,5 +43,11 @@ export class AppComponent implements OnInit {
   onAddHobby() {
     const control = new FormControl(null, Validators.required);
     (<FormArray>this.signupForm.get('hobbies')).push(control);
+  }
+
+  //This solution is by a method
+  getControls() {
+    //This a casting solution
+    return (<FormArray>this.signupForm.get('hobbies')).controls;
   }
 }
