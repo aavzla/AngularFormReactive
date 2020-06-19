@@ -31,7 +31,12 @@
                    class="form-control">
             <span class="help-block"
                   *ngIf="!signupForm.get('userData.email').valid && signupForm.get('userData.email').touched">
-              Please enter a valid email!
+              <span *ngIf="signupForm.get('userData.email').hasError('emailIsForbidden')">
+                This email is invalid!
+              </span>
+              <span *ngIf="signupForm.get('userData.email').hasError('required')">
+                This field is required!
+              </span>
             </span>
           </div>
         </div>

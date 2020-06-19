@@ -5,6 +5,8 @@ import {
   Validators,
   FormArray
 } from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import { map, delay } from 'rxjs/operators'
 
 @Component({
   selector: 'app-root',
@@ -15,14 +17,26 @@ export class AppComponent implements OnInit {
   genders = ['male', 'female'];
   //This property will hold our reactive form.
   signupForm: FormGroup;
-  //This property will hold the forbidden usernames.
+  //This class property will hold the forbidden usernames.
   forbiddenUsernames = ['user', 'superuser'];
+  //This class property will hold the forbidden emails.
+  forbiddenEmailList = ['test@test.com'];
 
   /*
+   * For our custom validation for username. Use the case to test. Comment/Uncommment the other cases.
    * There are 3 types of implementing custom validators for binding the keyword this:
-   * 1) A function definition as a method with a bind of the keyword this, in order to keep the reference.
+   * 1) A function definition as a method with a bind of the keyword this, in order to keep the reference to the class property.
    * 2) An arrow function definition without the bind of the keyword 'this'. Arrow functions keep the reference this.
    * 3) A function definition to a class property. Not implemented here.
+  */
+
+  /*
+   * For our async custom validation for email. Use the case to test. Comment/Uncommment the other cases.
+   * The numbers were selected to avoid confusion and doen't represent a continuation of the first list.
+   * 4) A function without any reference to a property class. This doesn't need a binding. We use a promise implementation.
+   * 5) A function with a reference to a property class, therefore a binding. We use an Observable implementation.
+   * 6) An arrow function with a reference to a property class. Arrow functions keep the reference this.
+   * We use an Observable with RxJS’s operators as implementation.
   */
 
   //This solution is by a getter
@@ -39,12 +53,20 @@ export class AppComponent implements OnInit {
       'userData': new FormGroup({
         'username': new FormControl(null, [
           Validators.required,
-          //1) The binding to our custom validator is only needed for the use of .indexOf solution.
+          //1) The binding to our custom validator is only needed to keep reference to the class property.
           //this.forbiddenNames.bind(this)
           //2)  Arrow functions will keep the reference to this.
           this.forbiddenNames
         ]),
-        'email': new FormControl(null, [Validators.required, Validators.email]),
+        'email': new FormControl(null,
+          [Validators.required, Validators.email],
+          //4) The custom validator doesn't need a bind, because we don't use a reference to the class property.
+          this.forbiddenEmails
+          //5)  The binding to our custom validator is only needed to keep reference to the class property.
+          //this.forbiddenEmails.bind(this)
+          //6) The custom validator doesn't need a bind, because we use an arrow function that will keept reference to the class property.
+          //this.forbiddenEmails
+        ),
       }),
       'gender': new FormControl('male'),
       'hobbies': new FormArray([])
@@ -91,4 +113,50 @@ export class AppComponent implements OnInit {
     }
     return null;
   }
+
+  //4) This is the Async function using a Promise.
+  //Because, we do not use a reference to property in this class, we don't need the binding.
+  forbiddenEmails(control: FormControl): Promise<any> | Observable<any> {
+    const promise = new Promise<any>(
+      (resolve, reject) => {
+        setTimeout(() => {
+          if (control.value === 'test@test.com') {
+            resolve({ 'emailIsForbidden': true });
+          } else {
+            resolve(null);
+          }
+        }, 1500);
+      }
+    );
+    return promise;
+  }
+
+  //5) This is the Async function using an Observable.
+  //Because, we use a reference to property in this class, we need the binding.
+  /*
+  forbiddenEmails(control: FormControl): Promise<any> | Observable<any> {
+    return new Observable<any>(observer => {
+      setTimeout(() => {
+        const email = control.value ? control.value.toLowerCase() : '';
+        if (this.forbiddenEmailList.some(e => e.toLowerCase() === email)) {
+          observer.next({ emailIsForbidden: true });
+        } else {
+          observer.next(null);
+        }
+        observer.complete();
+      }, 500);
+    });
+  }
+  */
+
+  //6) This is the Async arrow function using an rxjs operators.
+  //Because, we use a reference to property in this class, we don't need the binding.
+  /*
+  forbiddenEmails = (control: FormControl): Promise<any> | Observable<any> => {
+    return of(control.value).pipe(
+      map(value => this.forbiddenEmailList.some(e => e.toLowerCase() === value.toLowerCase()) ? { 'emailIsForbidden': true } : null),
+      delay(1500)
+    );
+  }
+  */
 }
