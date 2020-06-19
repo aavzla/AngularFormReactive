@@ -71,6 +71,21 @@ export class AppComponent implements OnInit {
       'gender': new FormControl('male'),
       'hobbies': new FormArray([])
     });
+
+    //The valueChanges and statusChanges will allow to react to the changes of the form or control when these changes occur.
+    //We chan have any of these observables at the form or control level.
+    //Ex. if the form is invalid, we could log the error or we could change a property value in order to show/hide a section, etc.
+
+    //The valueChanges subscription will allow to have the form back with the changes made.
+    //If this
+    //this.signupForm.valueChanges.subscribe(
+    //  (value) => console.log(value)
+    //);
+
+    //The statusChanges subscription will allow to have the status changed of the form.
+    //this.signupForm.statusChanges.subscribe(
+    //  (status) => console.log(status)
+    //);
   }
 
   onSubmit() {
