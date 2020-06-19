@@ -86,10 +86,36 @@ export class AppComponent implements OnInit {
     //this.signupForm.statusChanges.subscribe(
     //  (status) => console.log(status)
     //);
+
+
+    //Here, we can also set the form's values as default values at the beginning wit setValue.
+    //this.signupForm.setValue({
+    //  userData: {
+    //    username: 'Max',
+    //    email: 'testing@test.com'
+    //  },
+    //  gender: 'male',
+    //  hobbies: []
+    //});
+    //This is another way to set up an ArrayForm with a default value.
+    //(<FormArray>this.signupForm.get('hobbies')).controls.push(new FormControl('Football', Validators.required));
+
+    //Here, we can set some controls of the form as default values at the beginning with patchValue.
+    //this.signupForm.patchValue({
+    //  userData: {
+    //    username: 'Anna'
+    //  }
+    //});
   }
 
   onSubmit() {
     console.log(this.constructor.name + ' form submitted!', this.signupForm);
+    this.signupForm.reset();
+    
+    //We can reset the form with a default value if we pass a JS object of the FormGroup of the form.
+    //this.signupForm.reset({
+    //  hobbies: ['Baseball']
+    //});
   }
 
   onAddHobby() {
